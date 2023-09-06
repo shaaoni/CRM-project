@@ -6,6 +6,37 @@ if(isset($_SESSION['user']) && isset($_SESSION['pas'])){
   $user = $_SESSION['user'];
   $pas = $_SESSION['pas'];
 
+
+// $sql = "SELECT * FROM (user_login INNER JOIN workers ON user_login.id = workers.id)WHERE user_login.uname= '$user' and user_login.pass= '$pas' ";
+// $result = mysqli_query($conn,$sql);
+
+// if(mysqli_num_rows($result)>0){
+//   $row = mysqli_fetch_assoc($result);
+
+// }
+
+    $sql_req1 = "SELECT * FROM (workers INNER JOIN user_login ON user_login.id = workers.id)Where user_login.uname = '$user'and user_login.pass = '$pas' ";
+    $result_req1 = mysqli_query($conn, $sql_req1);
+
+    $row = mysqli_fetch_assoc($result_req1);
+    $email = $row['email'];
+    $fname = $row['fname'];
+    $lname = $row['lname'];
+    $fullname = $fname." ".$lname;
+
+    $userid='emp-000';
+    $user_id = $row['id'];
+    $emp_userid =$userid.$user_id;
+
+    $sql_req2 = "SELECT * FROM user_requests Where user_id= '$emp_userid' and email_id = '$email' ";
+    $result_req2 = mysqli_query($conn,$sql_req2);
+
+// $edit = "SELECT user_request from user_requests where user_id= '$emp_userid' and email_id = '$email' ";
+// $res = mysqli_query($conn,$edit_req);
+// $r= mysqli_fetch_assoc($result_req2);
+// $req = $r['user_request'];
+//echo $req;
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -59,20 +90,57 @@ if(isset($_SESSION['user']) && isset($_SESSION['pas'])){
     <br>
     
     <div class="col-sm-9">
-      <div class="well">
+      <div class="well row" style=" display: flex;">
+        <div>
+
+        <h4>Welcome: <?php echo $row['uname'] ?></h4>
+        <p>mail-id: <?php echo $row['email'];  ?></p>
+      </div>&nbsp &nbsp &nbsp &nbsp
+        <button id="show_application"> Applications</button>
+      </div>
+      <div id="application_table" style="display: none;">
+         <table border="2px;" class="table table-success table-striped" id="worker_table">
+           <thead style="border: 2px solid black;">
+             <th colspan="2">Employee Id</th>
+             <th colspan="2">Email</th>
+             <th colspan="2">Name</th>
+             <th colspan="2">Request</th>
+             <th colspan="2">Action</th>
+           </thead>
+           <tbody>
 <?php
     
-$sql = "SELECT * FROM user_login WHERE uname= '$user' and pass= '$pas' ";
-$result = mysqli_query($conn,$sql);
+    if(mysqli_num_rows($result_req2)>0){
+     // $count = 0;
+      while($user_req = mysqli_fetch_assoc($result_req2)){
+        $action = $user_req["status"];
+        $request = $user_req["user_request"];
 
-if(mysqli_num_rows($result)>0){
-  $row = mysqli_fetch_assoc($result);
-
-}
-      
 ?>
-        <h4>Welcome: <?php echo $row['uname'] ?></h4>
-        <p>logged In Time: <?php echo $row['email'];  ?></p>
+
+    <tr>
+        <td colspan="2"><?php echo $emp_userid; ?></td>
+        <td colspan="2"><?php echo $email; ?></td>
+        <td colspan="2"><?php echo $fullname; ?></td>
+        <td colspan="2"><?php echo $request; ?></td>
+        <td colspan="4">
+          <?php echo $action; ?> | 
+          <button onclick="edit_req()" id="edit">Edit</button> | 
+          <a href="cancel_req.php">CANCEL</a>
+        </td>
+    </tr>
+
+<?php
+
+      }
+      
+    }
+    
+?>
+           </tbody>
+
+         </table>
+
       </div>
       <div class="row">
         <div class="col-sm-3">
@@ -82,9 +150,9 @@ if(mysqli_num_rows($result)>0){
           </div>
         </div>
         <div class="col-sm-3">
-          <div class="well">
-            <h4>Applications</h4>
-            <p>100 Million</p> 
+          <div class="well" id="send_application">
+            <h4 style="cursor: pointer;">Place Your Messages</h4>
+            <!-- <p>100 Million</p>  -->
           </div>
         </div>
         <div class="col-sm-3">
@@ -100,6 +168,18 @@ if(mysqli_num_rows($result)>0){
           </div>
         </div>
       </div>
+
+<div id="appeal" style="display: none;"> 
+<form action="" method="post" name="request_form" id="request_form">
+ 
+  <textarea id="request"  name="request" placeholder="Enter your appeal" class="md-textarea form-control" rows="4" cols="50"></textarea>
+  <br/>
+  <input type="submit" name="submit" value="Submit Request" class="btn btn-primary">
+  <input type="submit" name="editRequest" value="Edit Request" class="btn btn-primary">
+</form>
+</div>
+<br>
+
       <div class="row">
         <div class="col-sm-4">
           <div class="well">
@@ -142,8 +222,78 @@ if(mysqli_num_rows($result)>0){
 </body>
 </html>
 
+<script type="text/javascript">
+  
+$(document).ready(function(){
+  $("#send_application").click(function(){
+      $("#appeal").toggle(350);
+    });
+});
+
+$(document).ready(function(){
+  $("#show_application").click(function(){
+      $("#application_table").toggle(350);
+    });
+});
+
+
+</script>
+<script type="text/javascript">
+  
+$(document).ready(function(){
+  $("#request_form").submit(function(e){
+    e.preventDefault();
+
+    $.ajax({
+      data: $("#request_form").serialize(),
+       type: "post",
+       url: "insert_request.php",
+       success: function(data){
+        console.log(data);
+        if(data.trim()==="emptyVar"){
+          alert("Please type some appeal");
+        }
+        if(data.trim()==="update_success"){
+          alert("Request updated successfully!!");
+        }
+        if(data.trim()==="update_error"){
+          alert("Request updation failed!!");
+        }
+        if(data.trim()==="sent_successfully"){
+          alert("Request sent successfully");
+        }
+        if(data.trim()==="sent_error"){
+          alert("Failed sending request");
+        }
+       },
+       error: function(){
+        alert("There was some error calling this ajax");
+       }
+    });
+  });
+
+});
+
+</script>
+
+<script type="text/javascript">
+  
+function edit_req(){
+
+document.getElementById('request').innerHTML = "<?php echo $request; ?>";
+ } 
+
+// <script type="text/javascript">
+$(document).ready(function(){
+    $("#edit").click(function(){
+        $("#appeal").toggle(350);
+      });
+  });
+
+</script>
 
 <?php
+
 }
 else{
 

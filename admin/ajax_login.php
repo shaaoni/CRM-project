@@ -7,7 +7,7 @@ include_once('../config/db.php');
 
  
   $username = $_POST['username'];  
-  $password = md5($_POST['password']);
+  $password = $_POST['password'];
 
   echo $username;
   echo $password;

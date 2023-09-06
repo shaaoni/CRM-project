@@ -7,7 +7,7 @@ if(isset($_SESSION['u_name']) && isset($_SESSION['u_pass'])){
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>ADMIN DASHBOARD</title>
+  <title>Calendar</title>
   <meta charset="utf-8">
   
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -19,6 +19,8 @@ if(isset($_SESSION['u_name']) && isset($_SESSION['u_pass'])){
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 
   <link rel="stylesheet" type="text/css" href="./css/dashboard.css">
+
+  <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js'></script>
 
 </head>
 <body>
@@ -49,13 +51,13 @@ if(isset($_SESSION['u_name']) && isset($_SESSION['u_pass'])){
     <div class="col-sm-3 sidenav hidden-xs" style="height: 700px;">
       <h2>Logo</h2>
       <ul class="nav nav-pills nav-stacked">
-        <li class="active"><a href="#dashboard.php">Admin Dashboard</a></li>
+        <li><a href="dashboard.php">Admin Dashboard</a></li>
         <li><a href="#">Clients</a></li>
         <li><a href="workers.php">Workers</a></li>
         <li><a href="#">Projects</a></li>
         <li><a href="#">Properties</a></li>
         <li><a href="#">Leads</a></li>
-        <li><a href="calendar.php">Time sheet</a></li>
+        <li class="active"><a href="calendar.php">Time sheet</a></li>
         <li><a href="#">Billing & Invoices</a></li>
         <li><a href="#">Agreements</a></li>
         <li><a href="#">Masters</a></li>
@@ -70,72 +72,10 @@ if(isset($_SESSION['u_name']) && isset($_SESSION['u_pass'])){
     
     <div class="col-sm-9">
       <div class="well">
-        <h4>Dashboard</h4>
-        <ul>
-        <li> Welcome : <?php  echo strtoupper($_SESSION['full_name']); ?></li>
-        <li>Email: <?php echo  $_SESSION['email_id']; ?></li>
-        </ul>
+        
       </div>
-      <div class="row">
-        <div class="col-sm-3">
-          <div class="well">
-            <h4>Workers</h4>
-            <p>1 Million</p> 
-          </div>
-        </div>
-        <div class="col-sm-3">
-          <div class="well">
-            <h4>Applications</h4>
-            <p>100 Million</p> 
-          </div>
-        </div>
-        <div class="col-sm-3">
-          <div class="well">
-            <h4>Messages</h4>
-            <p>10 Million</p> 
-          </div>
-        </div>
-        <div class="col-sm-3">
-          <div class="well">
-            <h4>Bounce</h4>
-            <p>30%</p> 
-          </div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-sm-4">
-          <div class="well">
-            <p>Text</p> 
-            <p>Text</p> 
-            <p>Text</p> 
-          </div>
-        </div>
-        <div class="col-sm-4">
-          <div class="well">
-            <p>Text</p> 
-            <p>Text</p> 
-            <p>Text</p> 
-          </div>
-        </div>
-        <div class="col-sm-4">
-          <div class="well">
-            <p>Text</p> 
-            <p>Text</p> 
-            <p>Text</p> 
-          </div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-sm-8">
-          <div class="well">
-            <p>Text</p> 
-          </div>
-        </div>
-        <div class="col-sm-4">
-          <div class="well">
-            <p>Text</p> 
-          </div>
-        </div>
+      <div class="row" id="calendar">
+     
       </div>
     </div>
   </div>
@@ -144,6 +84,17 @@ if(isset($_SESSION['u_name']) && isset($_SESSION['u_pass'])){
 </body>
 </html>
 
+<script>
+
+      document.addEventListener('DOMContentLoaded', function() {
+        var calendarEl = document.getElementById('calendar');
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+          initialView: 'dayGridMonth'
+        });
+        calendar.render();
+      });
+
+</script>
 
 <?php
 }

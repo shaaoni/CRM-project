@@ -5,11 +5,9 @@ include_once("./config/db.php");
 if(isset($_SESSION['user']) && isset($_SESSION['pas'])){
     $user = $_SESSION['user'];
     $pas = $_SESSION['pas'];
-    // $email = $_SESSION['mail'];
 
     $sql = "SELECT * FROM user_login WHERE uname= '$user' and pass= '$pas' ";
         $result = mysqli_query($conn,$sql);
-// print_r($result);
         if(mysqli_num_rows($result)>0){
           $all = mysqli_fetch_assoc($result);
           // print_r($all);
@@ -18,7 +16,6 @@ if(isset($_SESSION['user']) && isset($_SESSION['pas'])){
           $fullname = $all['full_name'];
           $uname = $all['uname'];
           $password = $all['pass'];
-          $firstname = $all
         }
 
 ?>
@@ -41,16 +38,16 @@ if(isset($_POST['update'])){
         $folder = "./img/" . $filename;
         $sql = "SELECT img FROM admin WHERE email = '$email'";
         $result = mysqli_query($conn, $sql);
-        // print_r($result);
+        
         $row = mysqli_fetch_assoc($result);
-        // print_r($$row);
+        
         $previousImage = "./img/" . $row['img'];
 
         $sql = "UPDATE user_login SET img = '$filename', full_name = '$fulnm_update' , uname = '$unm_update', pass = '$pas_update' WHERE email = '$email'";
         $stmt = mysqli_query($conn, $sql);
 
         if ($stmt) {
-            // Delete the previous image if it exists
+            
             if (file_exists($previousImage)) {
                 unlink($previousImage);
             }
@@ -172,7 +169,7 @@ if(isset($_POST['update'])){
     <div class="collapse navbar-collapse" id="myNavbar">
       <ul class="nav navbar-nav">
         <li class="active"><a href="dashboard.php">Admin Dashboard</a></li>
-        <!-- <li><a href="user.html">User</a></li> -->
+        
         <li><a href="profile.php" style="color: #0000ff;">Account Settings</a></li>
         <li><a href="logout_user.php" style="color: #0000ff;">Log Out</a></li>
       </ul>
@@ -183,15 +180,14 @@ if(isset($_POST['update'])){
 <div class="container-fluid">
   <div class="row content">
     <div class="col-sm-3 sidenav hidden-xs dashboard">
-      <!-- <label  class="label"><h2>Profile</h2></label> -->
+      
       <br>
       <ul class="nav nav-pills nav-stacked">
 
         <?php
 
               if($Image == ""){
-                // error_reporting(0);
-                // echo "error";
+                
             ?>
 
 <nav id="profile_pic"><img src="./img/login.jpg" style="width: 150px; height: 150px; border-radius: 50%; margin: 5px;" ></nav><br>
@@ -241,7 +237,7 @@ if(isset($_POST['update'])){
 
 
 <div id="myModal" class="modal">
-              <!-- Modal content -->
+              
               <div class="modal-content">
                 <span class="close">&times;</span>
                 <p>
@@ -268,7 +264,7 @@ Designation: <input name="desig" rows="5" cols="40" id="desig"></input><br><br>
 
 
             <div id="err_modal" class="err_mdl">
-              <!-- Modal content -->
+              
               <div class="err_content">
                 <span class="close_err">&times;</span>
                 <p>

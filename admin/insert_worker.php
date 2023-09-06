@@ -28,9 +28,9 @@ $fname = $lname = $id = $uname = $doj = $mail = $pas = "";
   }else{
 
 
-$sql1= "INSERT INTO user_login (uname,full_name,email,pass) VALUES ('$uname', '$full_name','$mail','$pas' )";
+$sql1= "INSERT INTO user_login (uname,pass) VALUES ('$uname', '$pas')";
 
-$sql2= "INSERT INTO workers (user_id,uname,fname,lname,doj,email,pass) VALUES ('$emp_id','$uname','$fname', '$lname','$doj','$mail','$pas')";
+$sql2= "INSERT INTO workers (user_id,uname,fname,lname,doj,email) VALUES ('$emp_id','$uname','$fname', '$lname','$doj','$mail')";
 
         $myquery = mysqli_query($conn,$sql1);
         $result = mysqli_query($conn,$sql2);
